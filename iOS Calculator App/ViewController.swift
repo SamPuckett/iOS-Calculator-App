@@ -43,6 +43,22 @@ class ViewController: UIViewController {
     }
     
     @IBAction func didPressEquals(_ sender: Any) {
+        guard let labelInt:Int = Int(labelString) else {
+            return
+        }
+        if (currentModes == modes.not_set || lastButtonWasMode) {
+            return
+        }
+        if (currentModes == modes.addition) {
+            numSaved += labelInt
+        }
+        else if(currentModes == modes.subtraction) {
+            numSaved -= labelInt
+        }
+        currentModes = modes.not_set
+        labelString = "\(numSaved)"
+        updateText()
+        lastButtonWasMode = true
     }
     
     @IBAction func didPressClear(_ sender: Any) {
@@ -77,8 +93,10 @@ class ViewController: UIViewController {
         if (currentModes == modes.not_set) {
             numSaved = labelInt
         }
-        
-        label.text = "\(labelInt)"
+        let formatter:NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        let num:NSNumber = NSNumber(value: labelInt)
+        label.text = formatter.string(from: num)
     }
     
     func changeMode(newMode:modes) {
